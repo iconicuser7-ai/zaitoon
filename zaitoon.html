@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zaitoon — Authentic Arabian Dining, Chennai</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --black:#0B0B0B;
+  --brown:#1A1A1A;
+  --gold:#D4AF37;
+  --gold-light:#F0D060;
+  --gold-dim:rgba(212,175,55,0.15);
+  --white:#FFFFFF;
+  --grey:#AAAAAA;
+  --glass:rgba(255,255,255,0.04);
+  --glass-border:rgba(212,175,55,0.2);
+}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Poppins',sans-serif;
+  background:var(--black);
+  color:var(--white);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* CUSTOM CURSOR */
+#cursor{
+  position:fixed;width:12px;height:12px;background:var(--gold);
+  border-radius:50%;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);transition:transform 0.1s;
+}
+#cursor-glow{
+  position:fixed;width:60px;height:60px;
+  background:radial-gradient(circle,rgba(212,175,55,0.15),transparent 70%);
+  border-radius:50%;pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);transition:transform 0.25s ease,opacity 0.3s;
+}
+
+/* LOADER */
+#loader{
+  position:fixed;inset:0;background:var(--black);z-index:10000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;
+  transition:opacity 0.8s ease;
+}
+#loader .loader-logo{
+  font-family:'Cinzel',serif;font-size:2.2rem;letter-spacing:0.3em;color:var(--gold);
+  opacity:0;animation:fadeIn 0.6s 0.3s forwards;
+}
+#loader .loader-bar-wrap{
+  width:220px;height:2px;background:rgba(212,175,55,0.15);
+  opacity:0;animation:fadeIn 0.6s 0.5s forwards;
+}
+#loader-bar{
+  height:100%;width:0%;background:var(--gold);
+  transition:width 1.8s cubic-bezier(0.4,0,0.2,1);
+}
+#loader .loader-sub{
+  font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--grey);
+  opacity:0;animation:fadeIn 0.6s 0.5s forwards;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.6rem 5rem;
+  transition:padding 0.4s,background 0.4s,border-color 0.4s;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{
+  padding:1rem 5rem;
+  background:rgba(11,11,11,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom-color:rgba(212,175,55,0.12);
+}
+.nav-logo{
+  font-family:'Cinzel',serif;font-size:1.5rem;letter-spacing:0.2em;
+  color:var(--gold);text-decoration:none;
+}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{
+  color:rgba(255,255,255,0.65);text-decoration:none;
+  font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--gold);}
+.nav-order{
+  background:transparent;border:1px solid var(--gold);
+  color:var(--gold);padding:0.55rem 1.5rem;
+  font-family:'Poppins',sans-serif;font-size:0.7rem;
+  letter-spacing:0.15em;text-transform:uppercase;cursor:none;
+  text-decoration:none;transition:background 0.25s,color 0.25s;
+}
+.nav-order:hover{background:var(--gold);color:var(--black);}
+
+/* HERO */
+.hero{
+  min-height:100vh;position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom,rgba(11,11,11,0.3) 0%,rgba(11,11,11,0.55) 50%,rgba(11,11,11,0.92) 100%),
+    radial-gradient(ellipse at 60% 40%,rgba(212,175,55,0.08) 0%,transparent 60%);
+  background-color:#1a1208;
+}
+/* Rich food-like texture pattern */
+.hero-pattern{
+  position:absolute;inset:0;opacity:0.04;
+  background-image:
+    radial-gradient(circle at 20% 30%,rgba(212,175,55,1) 1px,transparent 1px),
+    radial-gradient(circle at 80% 70%,rgba(212,175,55,1) 1px,transparent 1px),
+    radial-gradient(circle at 50% 50%,rgba(212,175,55,1) 0.5px,transparent 0.5px);
+  background-size:60px 60px,80px 80px,40px 40px;
+}
+.hero-glow{
+  position:absolute;top:50%;left:50%;
+  width:800px;height:800px;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(212,175,55,0.06) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-content{position:relative;z-index:2;max-width:860px;padding:0 2rem;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(212,175,55,0.3);
+  padding:0.4rem 1.2rem;margin-bottom:2rem;
+  opacity:0;animation:fadeUp 0.8s 1.8s forwards;
+}
+.hero-badge span{width:4px;height:4px;background:var(--gold);border-radius:50%;display:inline-block;}
+.hero h1{
+  font-family:'Cinzel',serif;
+  font-size:clamp(2.8rem,7vw,5.5rem);
+  font-weight:700;line-height:1.05;
+  letter-spacing:0.05em;
+  color:var(--white);
+  opacity:0;animation:fadeUp 0.9s 2s forwards;
+}
+.hero h1 .gold{color:var(--gold);}
+.hero-sub{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1rem,2vw,1.3rem);
+  font-style:italic;color:var(--grey);
+  margin-top:1.2rem;line-height:1.7;
+  opacity:0;animation:fadeUp 0.9s 2.15s forwards;
+}
+.hero-rating{
+  display:flex;align-items:center;justify-content:center;gap:0.6rem;
+  margin-top:1.8rem;
+  opacity:0;animation:fadeUp 0.9s 2.3s forwards;
+}
+.hero-stars{color:var(--gold);font-size:1rem;letter-spacing:0.1em;}
+.hero-rating-text{font-size:0.78rem;color:rgba(255,255,255,0.55);}
+.hero-rating-text strong{color:var(--gold);font-size:1rem;}
+.hero-actions{
+  display:flex;gap:1.2rem;justify-content:center;
+  margin-top:2.8rem;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 0.9s 2.45s forwards;
+}
+.btn-gold{
+  background:var(--gold);color:var(--black);
+  padding:0.9rem 2.4rem;
+  font-family:'Poppins',sans-serif;font-size:0.78rem;
+  letter-spacing:0.15em;text-transform:uppercase;font-weight:600;
+  text-decoration:none;border:none;cursor:none;
+  transition:background 0.25s,transform 0.2s,box-shadow 0.25s;
+  box-shadow:0 0 0 rgba(212,175,55,0);
+}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-3px);box-shadow:0 8px 30px rgba(212,175,55,0.3);}
+.btn-outline{
+  background:transparent;color:var(--white);
+  border:1px solid rgba(255,255,255,0.3);
+  padding:0.9rem 2.4rem;
+  font-family:'Poppins',sans-serif;font-size:0.78rem;
+  letter-spacing:0.15em;text-transform:uppercase;
+  text-decoration:none;cursor:none;
+  transition:border-color 0.25s,color 0.25s,transform 0.2s;
+}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px);}
+.hero-scroll{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  opacity:0;animation:fadeIn 1s 3s forwards;
+}
+.hero-scroll span{font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--grey);}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s infinite;}
+
+/* SECTION COMMON */
+section{padding:7rem 5rem;}
+.section-label{
+  font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.8rem;
+  display:flex;align-items:center;gap:0.8rem;
+}
+.section-label::before{content:'';width:32px;height:1px;background:var(--gold);}
+.section-title{
+  font-family:'Cinzel',serif;
+  font-size:clamp(1.8rem,4vw,3rem);
+  font-weight:600;line-height:1.2;
+  letter-spacing:0.04em;
+}
+.section-title em{font-family:'Playfair Display',serif;font-style:italic;color:var(--gold);}
+
+/* ABOUT */
+.about{background:var(--brown);}
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:6rem;
+  align-items:center;margin-top:4rem;
+}
+.about-text p{
+  font-size:0.9rem;line-height:1.95;color:var(--grey);
+  margin-bottom:1.2rem;
+}
+.about-text p strong{color:var(--white);}
+.about-divider{
+  width:60px;height:2px;
+  background:linear-gradient(to right,var(--gold),transparent);
+  margin:2rem 0;
+}
+.about-numbers{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem;}
+.about-num{
+  border:1px solid var(--glass-border);
+  padding:1.5rem;background:var(--glass);
+  backdrop-filter:blur(10px);
+}
+.about-num-val{
+  font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);font-weight:600;
+}
+.about-num-label{font-size:0.72rem;letter-spacing:0.1em;color:var(--grey);margin-top:0.3rem;}
+.about-visual{position:relative;}
+.about-img-box{
+  aspect-ratio:4/5;
+  background:linear-gradient(135deg,#1a1208,#0d0d0d);
+  border:1px solid var(--glass-border);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.about-img-box-inner{
+  font-family:'Playfair Display',serif;
+  font-size:5rem;opacity:0.06;text-align:center;
+  color:var(--gold);line-height:1.3;
+  pointer-events:none;user-select:none;
+}
+.about-tag{
+  position:absolute;bottom:-1.5rem;right:-1.5rem;
+  background:var(--gold);color:var(--black);
+  padding:1.5rem;
+  font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;
+  text-align:center;
+}
+.about-tag span{display:block;font-size:1.8rem;font-weight:700;letter-spacing:0;}
+
+/* MENU */
+.menu{background:var(--black);}
+.menu-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3.5rem;}
+.menu-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;
+}
+.menu-card{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(12px);
+  padding:2rem 1.5rem;
+  position:relative;overflow:hidden;
+  transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;
+  cursor:none;
+}
+.menu-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(212,175,55,0.08),transparent 60%);
+  opacity:0;transition:opacity 0.3s;
+}
+.menu-card:hover{
+  transform:translateY(-8px);
+  border-color:rgba(212,175,55,0.5);
+  box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(212,175,55,0.08);
+}
+.menu-card:hover::before{opacity:1;}
+.menu-emoji{
+  font-size:2.8rem;margin-bottom:1.2rem;display:block;
+  filter:drop-shadow(0 0 12px rgba(212,175,55,0.3));
+  transition:filter 0.3s,transform 0.3s;
+}
+.menu-card:hover .menu-emoji{filter:drop-shadow(0 0 20px rgba(212,175,55,0.6));transform:scale(1.1);}
+.menu-card-tag{
+  font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.6rem;
+}
+.menu-card h3{
+  font-family:'Playfair Display',serif;
+  font-size:1.25rem;font-weight:600;margin-bottom:0.7rem;
+}
+.menu-card p{font-size:0.78rem;color:var(--grey);line-height:1.7;}
+.menu-price{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:1.5rem;padding-top:1.2rem;
+  border-top:1px solid rgba(212,175,55,0.12);
+}
+.menu-price span:first-child{
+  font-family:'Cinzel',serif;color:var(--gold);font-size:1rem;
+}
+.menu-price span:last-child{
+  font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--grey);
+}
+
+/* WHY */
+.why{background:var(--brown);}
+.why-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;
+  margin-top:3.5rem;
+}
+.why-card{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(12px);
+  padding:2.5rem 1.5rem;text-align:center;
+  position:relative;overflow:hidden;
+  transition:border-color 0.3s,transform 0.3s;
+}
+.why-card:hover{border-color:rgba(212,175,55,0.4);transform:translateY(-6px);}
+.why-icon{
+  font-size:2rem;margin-bottom:1.2rem;display:block;
+  filter:drop-shadow(0 0 8px rgba(212,175,55,0.4));
+}
+.why-card h4{
+  font-family:'Cinzel',serif;font-size:0.8rem;letter-spacing:0.1em;
+  color:var(--white);margin-bottom:0.6rem;
+}
+.why-card p{font-size:0.75rem;color:var(--grey);line-height:1.6;}
+.why-highlight{border-color:rgba(212,175,55,0.35);background:rgba(212,175,55,0.04);}
+
+/* EXPERIENCE */
+.experience{background:var(--black);}
+.exp-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+  margin-top:3.5rem;
+}
+.exp-card{
+  background:var(--glass);border:1px solid var(--glass-border);
+  backdrop-filter:blur(12px);
+  padding:3rem 2.5rem;text-align:center;
+  transition:transform 0.3s,border-color 0.3s;
+  position:relative;overflow:hidden;
+}
+.exp-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform 0.4s;
+}
+.exp-card:hover{transform:translateY(-6px);border-color:rgba(212,175,55,0.3);}
+.exp-card:hover::after{transform:scaleX(1);}
+.exp-icon{font-size:2.5rem;margin-bottom:1.5rem;display:block;}
+.exp-card h3{
+  font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:0.1em;
+  color:var(--white);margin-bottom:0.8rem;
+}
+.exp-card p{font-size:0.82rem;color:var(--grey);line-height:1.75;}
+
+/* LOCATION */
+.location-section{
+  background:var(--brown);
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+}
+.location-info{padding:7rem 5rem;}
+.location-items{display:flex;flex-direction:column;gap:2rem;margin-top:3rem;}
+.loc-item{display:flex;gap:1.2rem;align-items:flex-start;}
+.loc-icon{
+  width:44px;height:44px;flex-shrink:0;
+  border:1px solid rgba(212,175,55,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  background:rgba(212,175,55,0.04);
+}
+.loc-text h5{
+  font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.35rem;
+}
+.loc-text p{font-size:0.85rem;color:var(--grey);line-height:1.6;}
+.loc-text a{color:var(--grey);text-decoration:none;transition:color 0.2s;}
+.loc-text a:hover{color:var(--gold);}
+.location-map{
+  background:#0d0d0d;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1rem;border-left:1px solid rgba(212,175,55,0.1);
+  position:relative;overflow:hidden;
+}
+.location-map::before{
+  content:'';position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(212,175,55,0.03) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(212,175,55,0.03) 40px);
+}
+.map-pin{font-size:3rem;position:relative;z-index:1;animation:pinBounce 2s ease-in-out infinite;}
+.map-address{
+  position:relative;z-index:1;text-align:center;
+  font-size:0.78rem;color:var(--grey);line-height:1.7;
+}
+.map-link{
+  position:relative;z-index:1;
+  background:var(--gold);color:var(--black);
+  padding:0.7rem 1.8rem;font-size:0.7rem;
+  letter-spacing:0.15em;text-transform:uppercase;font-weight:600;
+  text-decoration:none;cursor:none;
+  transition:background 0.2s,transform 0.2s;
+}
+.map-link:hover{background:var(--gold-light);transform:translateY(-2px);}
+
+/* CTA */
+.cta-section{
+  background:var(--black);padding:8rem 5rem;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-glow{
+  position:absolute;top:50%;left:50%;
+  width:600px;height:600px;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(212,175,55,0.07) 0%,transparent 65%);
+  pointer-events:none;
+}
+.cta-section .section-label{justify-content:center;}
+.cta-section .section-label::before{display:none;}
+.cta-section h2{
+  font-family:'Cinzel',serif;
+  font-size:clamp(2rem,5vw,4rem);
+  font-weight:700;color:var(--white);line-height:1.15;
+  margin:1rem 0 0.5rem;
+}
+.cta-section h2 .gold{color:var(--gold);}
+.cta-section p{
+  font-size:0.95rem;color:var(--grey);
+  margin-bottom:2.8rem;font-style:italic;
+  font-family:'Playfair Display',serif;
+}
+.cta-actions{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;}
+
+/* FOOTER */
+footer{
+  background:#070707;padding:5rem 5rem 2.5rem;
+  border-top:1px solid rgba(212,175,55,0.1);
+}
+.footer-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:3rem;
+  padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.footer-brand .footer-logo{
+  font-family:'Cinzel',serif;font-size:1.5rem;letter-spacing:0.2em;color:var(--gold);
+  margin-bottom:1rem;display:block;
+}
+.footer-brand p{font-size:0.82rem;color:var(--grey);line-height:1.8;max-width:260px;}
+.footer-col h6{
+  font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.3rem;
+}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.7rem;}
+.footer-col a{font-size:0.82rem;color:var(--grey);text-decoration:none;transition:color 0.2s;cursor:none;}
+.footer-col a:hover{color:var(--gold);}
+.hours-item{
+  display:flex;justify-content:space-between;
+  font-size:0.8rem;color:var(--grey);
+  padding:0.4rem 0;border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.hours-item:last-child{border-bottom:none;}
+.hours-item span:last-child{color:var(--gold-light);}
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:2.5rem;flex-wrap:wrap;gap:1rem;
+}
+.footer-bottom p{font-size:0.72rem;color:rgba(255,255,255,0.2);letter-spacing:0.06em;}
+.social-links{display:flex;gap:1.2rem;}
+.social-links a{
+  width:36px;height:36px;border:1px solid rgba(212,175,55,0.2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--grey);text-decoration:none;font-size:0.8rem;
+  transition:border-color 0.2s,color 0.2s,background 0.2s;cursor:none;
+}
+.social-links a:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,0.05);}
+
+/* STICKY MOBILE ORDER */
+.sticky-order{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:900;
+  background:var(--gold);color:var(--black);
+  padding:1rem;text-align:center;
+  font-family:'Poppins',sans-serif;font-size:0.8rem;
+  letter-spacing:0.15em;text-transform:uppercase;font-weight:700;
+  text-decoration:none;
+}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity 0.9s ease,transform 0.9s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity 0.9s ease,transform 0.9s ease;}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes scrollPulse{0%,100%{opacity:1;transform:scaleY(1);}50%{opacity:0.4;transform:scaleY(0.6);}}
+@keyframes pinBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}
+  .nav-links{display:none;}
+  section{padding:4rem 1.5rem;}
+  .about-grid,.location-section{grid-template-columns:1fr;}
+  .menu-grid{grid-template-columns:repeat(2,1fr);}
+  .why-grid{grid-template-columns:repeat(2,1fr);}
+  .exp-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .sticky-order{display:block;}
+  body{padding-bottom:56px;}
+  .location-map{min-height:300px;}
+  .location-info{padding:4rem 1.5rem;}
+  #cursor,#cursor-glow{display:none;}
+  body{cursor:auto;}
+  .btn-gold,.btn-outline,.nav-order,.map-link,.map-link,.footer-col a,.social-links a,.sticky-order{cursor:pointer;}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-glow"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">ZAITOON</div>
+  <div class="loader-bar-wrap"><div id="loader-bar"></div></div>
+  <div class="loader-sub">Authentic Arabian Dining · Chennai</div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">ZAITOON</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#location">Location</a></li>
+  </ul>
+  <a href="tel:07299001006" class="nav-order">Order Now</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span></span> Chennai's Finest Arabian Cuisine <span></span></div>
+    <h1>Authentic <span class="gold">Arabian</span><br>Dining Experience</h1>
+    <p class="hero-sub">Grilled meats, rich flavors, and unforgettable taste —<br>from the heart of the Middle East to Royapettah.</p>
+    <div class="hero-rating">
+      <span class="hero-stars">★★★★★</span>
+      <span class="hero-rating-text"><strong>4.6</strong> &nbsp;·&nbsp; 14,000+ Reviews</span>
+    </div>
+    <div class="hero-actions">
+      <a href="#menu" class="btn-gold">View Menu</a>
+      <a href="tel:07299001006" class="btn-outline">Order Now</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-label reveal">Our Story</div>
+  <div class="about-grid">
+    <div class="reveal-left">
+      <h2 class="section-title">Where Every Meal<br>Tells a <em>Story</em></h2>
+      <div class="about-divider"></div>
+      <p>Zaitoon was born from a passion for authentic Arabian flavors — slow-cooked, wood-fired, and crafted with spices that carry centuries of culinary tradition.</p>
+      <p>Nestled in Royapettah, Chennai, we've built a dining destination that seamlessly blends <strong>Arabian, Indian, and Chinese</strong> cuisines under one roof. A space where families gather, food lovers discover, and late-night cravings find their home.</p>
+      <p>Every dish we serve is a testament to our commitment: <strong>real ingredients, real technique, real flavor.</strong></p>
+      <div class="about-numbers">
+        <div class="about-num">
+          <div class="about-num-val">4.6 ⭐</div>
+          <div class="about-num-label">Avg. Rating</div>
+        </div>
+        <div class="about-num">
+          <div class="about-num-val">14K+</div>
+          <div class="about-num-label">Happy Guests</div>
+        </div>
+        <div class="about-num">
+          <div class="about-num-val">3+</div>
+          <div class="about-num-label">Cuisines</div>
+        </div>
+        <div class="about-num">
+          <div class="about-num-val">1:30 AM</div>
+          <div class="about-num-label">Last Orders</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual reveal-right">
+      <div class="about-img-box">
+        <div class="about-img-box-inner">مطعم<br>زيتون<br>🔥</div>
+      </div>
+      <div class="about-tag">
+        <span>OPEN</span>
+        Till 1:30 AM
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu" id="menu">
+  <div class="menu-header">
+    <div>
+      <div class="section-label reveal">Signature Dishes</div>
+      <h2 class="section-title reveal">Crafted for the<br><em>Bold & Curious</em></h2>
+    </div>
+    <a href="tel:07299001006" class="btn-gold reveal" style="align-self:flex-end;">Order Now</a>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card reveal">
+      <span class="menu-emoji">🍖</span>
+      <div class="menu-card-tag">Arabian Special</div>
+      <h3>Mutton Mandi</h3>
+      <p>Slow-cooked tender mutton with fragrant Yemeni rice, smoky and deeply spiced — a royal feast in every bite.</p>
+      <div class="menu-price">
+        <span>Signature</span>
+        <span>Must Try</span>
+      </div>
+    </div>
+    <div class="menu-card reveal" style="transition-delay:0.1s">
+      <span class="menu-emoji">🍗</span>
+      <div class="menu-card-tag">Grilled Classic</div>
+      <h3>Grilled Chicken</h3>
+      <p>Whole or half chicken marinated in aromatic Middle Eastern spices, char-grilled to perfection over open flame.</p>
+      <div class="menu-price">
+        <span>Bestseller</span>
+        <span>All Time Fav</span>
+      </div>
+    </div>
+    <div class="menu-card reveal" style="transition-delay:0.2s">
+      <span class="menu-emoji">🌯</span>
+      <div class="menu-card-tag">Street Legend</div>
+      <h3>Shawarma</h3>
+      <p>Slow-roasted seasoned meat wrapped in soft pita with garlic sauce, pickles, and the perfect crunch.</p>
+      <div class="menu-price">
+        <span>Popular</span>
+        <span>Late Night Pick</span>
+      </div>
+    </div>
+    <div class="menu-card reveal" style="transition-delay:0.3s">
+      <span class="menu-emoji">🍜</span>
+      <div class="menu-card-tag">Fusion Specials</div>
+      <h3>Chinese Specials</h3>
+      <p>Indo-Chinese favorites — from sizzling noodles to spicy fried rice — crafted with Chennai's bold palate in mind.</p>
+      <div class="menu-price">
+        <span>Fusion</span>
+        <span>Chef's Pick</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why" id="why">
+  <div class="section-label reveal">Why Zaitoon</div>
+  <h2 class="section-title reveal">Five Reasons Guests<br><em>Keep Returning</em></h2>
+  <div class="why-grid">
+    <div class="why-card why-highlight reveal">
+      <span class="why-icon">⭐</span>
+      <h4>4.6 Rating</h4>
+      <p>14,000+ reviews from Chennai's most discerning diners</p>
+    </div>
+    <div class="why-card reveal" style="transition-delay:0.1s">
+      <span class="why-icon">🍽️</span>
+      <h4>Multi-Cuisine</h4>
+      <p>Arabian, Indian & Chinese — all perfected under one roof</p>
+    </div>
+    <div class="why-card reveal" style="transition-delay:0.2s">
+      <span class="why-icon">🌙</span>
+      <h4>Open Till 1:30 AM</h4>
+      <p>Late-night cravings, sorted — every night of the week</p>
+    </div>
+    <div class="why-card reveal" style="transition-delay:0.3s">
+      <span class="why-icon">🚚</span>
+      <h4>Fast Delivery</h4>
+      <p>Hot meals at your door via Swiggy and Zomato</p>
+    </div>
+    <div class="why-card reveal" style="transition-delay:0.4s">
+      <span class="why-icon">🪑</span>
+      <h4>Dine-In Comfort</h4>
+      <p>A warm, luxurious ambience perfect for families & gatherings</p>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div class="section-label reveal">How We Serve You</div>
+  <h2 class="section-title reveal">Three Ways to<br><em>Savour Zaitoon</em></h2>
+  <div class="exp-grid">
+    <div class="exp-card reveal">
+      <span class="exp-icon">🪑</span>
+      <h3>Dine In</h3>
+      <p>Immerse yourself in our warm, evocative ambience. Comfortable seating, attentive service, and a menu curated to impress at every visit.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.15s">
+      <span class="exp-icon">📦</span>
+      <h3>Takeaway</h3>
+      <p>Grab your favorites fresh from our kitchen. Packed with care and ready exactly when you want it — no wait, no fuss.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.3s">
+      <span class="exp-icon">🛵</span>
+      <h3>Delivery</h3>
+      <p>Order via Swiggy or Zomato for seamless no-contact delivery. Zaitoon flavors, delivered straight to your door.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<div class="location-section" id="location">
+  <div class="location-info">
+    <div class="section-label reveal">Find Us</div>
+    <h2 class="section-title reveal">Visit Us in the<br><em>Heart of Chennai</em></h2>
+    <div class="location-items">
+      <div class="loc-item reveal">
+        <div class="loc-icon">📍</div>
+        <div class="loc-text">
+          <h5>Address</h5>
+          <p>Woods Rd, Royapettah,<br>Chennai, Tamil Nadu</p>
+        </div>
+      </div>
+      <div class="loc-item reveal">
+        <div class="loc-icon">📞</div>
+        <div class="loc-text">
+          <h5>Phone</h5>
+          <p><a href="tel:07299001006">072990 01006</a></p>
+        </div>
+      </div>
+      <div class="loc-item reveal">
+        <div class="loc-icon">🕐</div>
+        <div class="loc-text">
+          <h5>Working Hours</h5>
+          <p>Daily: 11:00 AM – 1:30 AM</p>
+        </div>
+      </div>
+      <div class="loc-item reveal">
+        <div class="loc-icon">🌐</div>
+        <div class="loc-text">
+          <h5>Also Available On</h5>
+          <p>Swiggy &nbsp;·&nbsp; Zomato &nbsp;·&nbsp; Google Food</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="location-map">
+    <div class="map-pin">📍</div>
+    <div class="map-address">Woods Rd, Royapettah<br>Chennai, Tamil Nadu</div>
+    <a href="https://maps.google.com/?q=Zaitoon+Restaurant+Royapettah+Chennai" target="_blank" class="map-link">Get Directions →</a>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="section-label reveal">Ready to Indulge?</div>
+  <h2 class="reveal">Craving Something<br><span class="gold">Delicious?</span></h2>
+  <p class="reveal">Your table is waiting. Your flavors are ready.</p>
+  <div class="cta-actions reveal">
+    <a href="tel:07299001006" class="btn-gold">Order Now</a>
+    <a href="https://maps.google.com/?q=Zaitoon+Restaurant+Royapettah+Chennai" target="_blank" class="btn-outline">Visit Us Today</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="footer-logo">ZAITOON</span>
+      <p>Authentic Arabian flavors, crafted with passion in the heart of Chennai since day one. Open late, every night.</p>
+    </div>
+    <div class="footer-col">
+      <h6>Explore</h6>
+      <ul>
+        <li><a href="#about">Our Story</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#why">Why Zaitoon</a></li>
+        <li><a href="#location">Location</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h6>Order</h6>
+      <ul>
+        <li><a href="tel:07299001006">Call to Order</a></li>
+        <li><a href="#">Swiggy</a></li>
+        <li><a href="#">Zomato</a></li>
+        <li><a href="#">Dine-In Booking</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h6>Hours</h6>
+      <div class="hours-item"><span>Mon – Sun</span><span>11 AM – 1:30 AM</span></div>
+      <div class="hours-item"><span>Last Order</span><span>1:00 AM</span></div>
+      <div class="hours-item"><span>Delivery</span><span>Via App</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Zaitoon Restaurant, Chennai. All rights reserved.</p>
+    <div class="social-links">
+      <a href="#" aria-label="Instagram">📸</a>
+      <a href="#" aria-label="Facebook">📘</a>
+      <a href="#" aria-label="WhatsApp">💬</a>
+    </div>
+  </div>
+</footer>
+
+<!-- STICKY MOBILE ORDER -->
+<a href="tel:07299001006" class="sticky-order">📞 Order Now — 072990 01006</a>
+
+<script>
+// LOADER
+window.addEventListener('load',()=>{
+  const bar=document.getElementById('loader-bar');
+  const loader=document.getElementById('loader');
+  setTimeout(()=>{bar.style.width='100%';},100);
+  setTimeout(()=>{
+    loader.style.opacity='0';
+    setTimeout(()=>{loader.style.display='none';},800);
+  },2200);
+});
+
+// CURSOR
+const cursor=document.getElementById('cursor');
+const glow=document.getElementById('cursor-glow');
+let mx=0,my=0,gx=0,gy=0;
+document.addEventListener('mousemove',(e)=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+});
+function animateGlow(){
+  gx+=(mx-gx)*0.08;gy+=(my-gy)*0.08;
+  glow.style.left=gx+'px';glow.style.top=gy+'px';
+  requestAnimationFrame(animateGlow);
+}
+animateGlow();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2.5)';});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';});
+});
+
+// NAV SCROLL
+const nav=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',window.scrollY>60);
+});
+
+// SCROLL REVEAL
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.12});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
